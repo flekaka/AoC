@@ -1,0 +1,112 @@
+Certainly! To visualize the graph constructed from your parsed rules and updates, you can integrate one of the graph visualization libraries into your code. I'll show you how to use NetworkX with Matplotlib to visualize the graph for each update.
+
+
+Steps to Visualize the Graph
+
+Install Required Libraries: Ensure you have NetworkX and Matplotlib installed:
+
+bash
+Copy
+pip install networkx matplotlib
+Modify the Code to Include Visualization: We'll create a function to visualize the graph and call it within your main function.
+
+
+Visualization Function
+
+Here’s how you can add a function to visualize the graph:
+
+
+python
+Copy Code
+import networkx as nx
+import matplotlib.pyplot as plt
+from collections import defaultdict, deque
+
+def parse_rules(filename):
+    rules = []
+    with open(filename, 'r') as f:
+        for line in f:
+            x, y = map(int, line.strip().split('|'))
+            rules.append((x, y))
+    return rules
+
+def parse_updates(filename):
+    updates = []
+    with open(filename, 'r') as f:
+        for line in f:
+            updates.append(list(map(int, line.strip().split(','))))
+    return updates
+
+def build_graph(rules, pages):
+    graph = defaultdict(set)
+    for x, y in rules:
+        if x in pages and y in pages:
+            graph[x].add(y)
+    return graph
+
+def topological_sort(graph, pages):
+    indegree = {node: 0 for node in pages}
+    for node in graph:
+        for neighbor in graph[node]:
+            indegree[neighbor] += 1
+    
+    queue = deque([node for node in pages if indegree[node] == 0])
+    sorted_list = []
+    
+    while queue:
+        node = queue.popleft()
+        sorted_list.append(node)
+        for neighbor in graph[node]:
+            indegree[neighbor] -= 1
+            if indegree[neighbor] == 0:
+                queue.append(neighbor)
+    
+    return sorted_list if len(sorted_list) == len(pages) else None
+
+def is_correct_order(update, rules):
+    graph = build_graph(rules, update)
+    sorted_order = topological_sort(graph, update)
+    return sorted_order == update
+
+def visualize_graph(graph):
+    G = nx.DiGraph()
+
+    for node in graph:
+        for neighbor in graph[node]:
+            G.add_edge(node, neighbor)
+
+    pos = nx.spring_layout(G)
+    nx.draw(G, pos, with_labels=True, node_size=2000, node_color="lightblue", arrowsize=20)
+    plt.title("Graph Visualization")
+    plt.show()
+
+def main():
+    # Parse the rules from the file
+    rules = parse_rules('pages_ordering_rules.txt')
+    
+    # Parse the updates from the file
+    updates = parse_updates('pages_to_produce_in_each_update.txt')
+    
+    # Check each update for correct order and visualize
+    for update in updates:
+        graph = build_graph(rules, update)
+        visualize_graph(graph)  # Visualize the graph for each update
+        if is_correct_order(update, rules):
+            print(f"Update {update} is in correct order.")
+        else:
+            print(f"Update {update} is NOT in correct order.")
+
+if __name__ == "__main__":
+    main()
+
+Explanation
+
+visualize_graph Function: This function takes the graph (as constructed by build_graph) and uses NetworkX to visualize it.
+
+Add Edges: It adds edges to a DiGraph object, which represents a directed graph.
+Position Nodes: spring_layout is used to position nodes in a visually appealing way.
+Draw Graph: nx.draw is used to draw the graph with labels and arrows indicating direction.
+Integration in main: After building the graph for each update, visualize_graph(graph) is called to display the graph. This helps you see the structure of dependencies for each update.
+
+
+This setup will allow you to visualize the graph for each update as it is processed, helping you understand how the rules and updates interrelate.
