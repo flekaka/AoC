@@ -1,24 +1,32 @@
 def parse_rules(filename):
     # Reads the page ordering rules from the file and returns them as a list of tuples
+    print(f"Parsing rules from {filename}")
     rules = []
     with open(filename, 'r') as f:
         for line in f:
             # Split each line by '|' and convert to integers
             x, y = map(int, line.strip().split('|'))
             rules.append((x, y))
+            print(f"Rule parsed: {x} -> {y}")
+    print(f"Total rules parsed: {len(rules)}")
     return rules
 
 def parse_updates(filename):
+    # Reads the update lists from the file and returns them as a list of lists
+    print(f"Parsing updates from {filename}")
     updates = []
     with open(filename, 'r') as f:
         for line in f:
-            # Split each line by ',' and convert to integers
-            updates.append(list(map(int, line.strip().split(','))))
+            # Split each line by ',' and convert to a list of integers
+            update = list(map(int, line.strip().split(',')))
+            updates.append(update)
+            print(f"Update parsed: {update}")
+    print(f"Total updates parsed: {len(updates)}")
     return updates
 
 def build_graph(rules, pages):
     from collections import defaultdict
-    # Create a graph using a defaultdict where each key has an empty set as a default value
+    # Constructs a directed graph only using rules relevant to the given pages
     graph = defaultdict(set)
     print(f"Building graph for pages: {pages}")
     for x, y in rules:
@@ -31,12 +39,12 @@ def build_graph(rules, pages):
 
 def topological_sort(graph, pages):
     from collections import deque
+    
     # Initialize indegree of all pages to 0
     indegree = {node: 0 for node in pages}
-    
-    # Calculate the indegree for each node
     for node in graph:
         for neighbor in graph[node]:
+            # Increase indegree for each neighbor
             indegree[neighbor] += 1
     
     print(f"Initial indegrees: {indegree}")
@@ -54,6 +62,7 @@ def topological_sort(graph, pages):
         for neighbor in graph[node]:
             indegree[neighbor] -= 1
             print(f"Decreased indegree of {neighbor} to {indegree[neighbor]}")
+            # If indegree becomes 0, add to queue
             if indegree[neighbor] == 0:
                 queue.append(neighbor)
                 print(f"Node {neighbor} added to queue")
@@ -64,43 +73,37 @@ def topological_sort(graph, pages):
     return sorted_list if len(sorted_list) == len(pages) else None
 
 def is_correct_order(update, rules):
+    # Check if the given update is in correct order according to the rules
+    print(f"Checking order for update: {update}")
     graph = build_graph(rules, update)
     sorted_order = topological_sort(graph, update)
-    return sorted_order == update
+    is_correct = sorted_order == update
+    print(f"Update {update} is {'correctly' if is_correct else 'not'} ordered.")
+    return is_correct
 
 def find_middle_page(update):
     # Return the middle page of the update list
     length = len(update)
-    return update[length // 2]
+    middle_page = update[length // 2]
+    print(f"Middle page of {update} is {middle_page}")
+    return middle_page
 
 def main():
-    # Parse the rules from the file
+    # Parse rules and updates from files
     rules = parse_rules('test_pages_ordering_rules.txt')
-    
-    # Parse the updates from the file
     updates = parse_updates('test_pages_to_produce_in_each_update.txt')
     
-    # Step 4: Initialize sum_of_middle_pages to 0
     sum_of_middle_pages = 0
     
-    # Step 5: Process each update
+    # Process each update
     for update in updates:
         if is_correct_order(update, rules):
-            print(f"Update {update} is in correct order.")
-            # Find the middle page of the correctly ordered update
+            # If correctly ordered, find and add the middle page to sum
             middle_page = find_middle_page(update)
-            print(f"Middle page of update {update} is {middle_page}.")
-            # Add the middle page to the sum
             sum_of_middle_pages += middle_page
-        else:
-            print(f"Update {update} is NOT in correct order.")
-            # Visualize the correction process
-            graph = build_graph(rules, update)
-            correct_order = topological_sort(graph, update)
-            print(f"Correct order: {correct_order}")
-
-    # Output the sum of middle pages
-    print(f"Sum of middle pages of correctly ordered updates: {sum_of_middle_pages}")
+    
+    # Print the total sum of middle pages of correctly ordered updates
+    print("Sum of middle pages of correctly ordered updates:", sum_of_middle_pages)
 
 if __name__ == "__main__":
     main()
