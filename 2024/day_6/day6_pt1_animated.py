@@ -1,5 +1,6 @@
 import time
 import itertools
+import sys
 
 # Define directions for 4 possible moves: up, down, left, right.
 DIRECTIONS = [
