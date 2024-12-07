@@ -88,6 +88,6 @@ def simulate_guard_path(grid):
 
 if __name__ == "__main__":
     # Read the grid from input.txt and count occurrences of "XMAS"
-    grid = read_input("input.txt")
+    grid = read_input("input_test.txt")
     result = simulate_guard_path(grid)
     print(f"Total visited positions: {result}")
