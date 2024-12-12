@@ -1,10 +1,14 @@
 import os
+from datetime import datetime
 
-# Define the base directory (you can adjust this if you prefer to put the script elsewhere)
-base_dir = '2024'  # or 'AoC/2024' if you place this script in 'AoC'
+# Get the current year
+year = datetime.now().year
+
+# Define the base directory inside the 'AoC' folder using the current year
+base_dir = os.path.join('AoC', str(year))
 
 # Iterate through the day numbers from 10 to 25
-for day in range(10, 26):
+for day in range(0, 26):
     # Create the directory name for the current day
     day_dir = f'day_{day}'
     day_path = os.path.join(base_dir, day_dir)
@@ -31,4 +35,4 @@ for day in range(10, 26):
         with open(file_path, 'w') as f:
             pass  # Creates an empty file
 
-print("Folders and files have been created successfully.")
+print(f"Folders and files have been created successfully under 'AoC/{year}'.")
