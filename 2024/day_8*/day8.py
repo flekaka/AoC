@@ -1,4 +1,5 @@
 from collections import defaultdict
+import sys
 
 def inbounds(map, x, y):
     # Check if the coordinates (x, y) are within the bounds of the map
