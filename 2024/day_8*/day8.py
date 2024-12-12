@@ -46,12 +46,8 @@ def antinodes(p1, p2):
 filename = "input.txt"
 
 # Read the file content into a list of strings (each representing a row of the map)
-try:
-    with open(filename) as file:
+with open(filename) as file:
         data = file.read().strip().split("\n")
-except FileNotFoundError:
-    print(f"Error: The file '{filename}' was not found.")
-    sys.exit(1)
 
 # Create a dictionary mapping each frequency to a list of its antenna positions
 lut = defaultdict(list)
