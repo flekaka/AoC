@@ -29,7 +29,6 @@ def Blink(rock: int):
 
 # Simulate the process for 25 blinks
 for i in range(25):
-    print(f"\nBlink {i+1}:")
     newRocks = []
     for rock in rocks:
         newRocks.extend(Blink(rock))  # Apply Blink transformation to each rock
@@ -37,4 +36,4 @@ for i in range(25):
 
 # Calculate and print the result after 6 blinks
 answer1 = len(rocks)
-print(f"\npart 1: {answer1}")
+print(f"Result: {answer1}")
