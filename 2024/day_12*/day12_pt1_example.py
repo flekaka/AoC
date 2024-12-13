@@ -116,7 +116,7 @@ if __name__ == '__main__':
         with open(filename, "r") as file:
             return file.read().splitlines()
 
-    # Load the input data
+    # Load the input data - STEP 1!
     data = read_file("input_example.txt")
     print(f"Input data: {data}")
 
