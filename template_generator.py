@@ -20,8 +20,8 @@ if os.path.exists(base_dir):
     else:
         print(f"A file named '{year}' already exists in 'AoC'. No folders or files were created.")
 else:
-    # Iterate through the day numbers from 10 to 25
-    for day in range(10, 26):
+    # Iterate through the day numbers from 1 to 25
+    for day in range(1, 26):
         # Create the directory name for the current day
         day_dir = f'day_{day}'
         day_path = os.path.join(base_dir, day_dir)
