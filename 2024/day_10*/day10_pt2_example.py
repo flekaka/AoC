@@ -48,8 +48,6 @@ file_path = 'input_example.txt'
 with open(file_path, 'r') as file:
     mat = [[int(x) for x in line.strip()] for line in file]
 
-# Print the input matrix for debugging
-print("Input matrix:")
 for row in mat:
     print(' '.join(map(str, row)))
 
