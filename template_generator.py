@@ -4,12 +4,21 @@ from datetime import datetime
 # Get the current year
 year = datetime.now().year
 
-# Define the base directory inside the 'AoC' folder using the current year
-base_dir = os.path.join('AoC', str(year))
+# Determine the base path where the script is located
+base_script_path = os.path.dirname(os.path.abspath(__file__))
 
-# Check if the base directory for the current year already exists
+# Assume the AoC directory is the directory where the script is located
+aoc_dir = base_script_path
+
+# Define the base directory inside the 'AoC' folder using the current year
+base_dir = os.path.join(aoc_dir, str(year))
+
+# Check if there is a file or directory named after the current year
 if os.path.exists(base_dir):
-    print(f"The directory 'AoC/{year}' already exists. No folders or files were created.")
+    if os.path.isdir(base_dir):
+        print(f"The directory '{year}' already exists in 'AoC'. No folders or files were created.")
+    else:
+        print(f"A file named '{year}' already exists in 'AoC'. No folders or files were created.")
 else:
     # Iterate through the day numbers from 10 to 25
     for day in range(10, 26):
